@@ -73,6 +73,9 @@ docker compose logs -f fl-server fl-client-0 fl-client-1
 
 아래는 실습 중 캡처한 두 화면을 각각 설명합니다.
 
+<img width="2876" height="1800" alt="f1" src="https://github.com/user-attachments/assets/796fc3dc-0278-4d06-84b0-2777ef902a04" />
+
+
 #### 이미지 1 — 첫 라운드 집계 전
 
 - 상단 **Experiments**가 `1`이고 **Tracked experiments**에는 `fl_deploy`만 있습니다. Docker 기반 분산 학습 작업 하나가 등록된 상태입니다.
@@ -81,6 +84,9 @@ docker compose logs -f fl-server fl-client-0 fl-client-1
 - **Open deployment monitor**를 누르면 Docker 서버와 클라이언트의 연결 상태를 별도로 확인할 수 있습니다.
 
 따라서 이미지 1은 두 학습 흐름이 시작됐지만 결과 라운드가 아직 기록되기 전인 화면입니다. CIFAR-10은 CPU에서 오래 걸릴 수 있으므로 `round 0`에서 학습이 진행되는 동안 기다려야 합니다.
+
+<img width="2880" height="1800" alt="f2" src="https://github.com/user-attachments/assets/b0f7e91b-67ca-4bd4-9691-b87bc891d9e9" />
+
 
 #### 이미지 2 — Docker 첫 라운드 집계 후
 
