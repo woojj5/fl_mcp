@@ -1,0 +1,8 @@
+# Runtime dependencies used by the FL services. PyTorch and torchvision are
+# installed separately from the CPU wheel index in Dockerfile.
+numpy>=1.24.0
+pyyaml>=6.0
+flask>=3.0.0
+requests
+Pillow
+cryptography>=42.0.0

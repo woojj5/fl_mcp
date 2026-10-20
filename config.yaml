@@ -1,0 +1,71 @@
+# FL Platform - default configuration
+# Override any field in your own YAML or pass as a dict to platform.init()
+
+task_id: fl_cifar10
+seed: 42
+model: simple_cnn            # lenet | simple_cnn | rnn | mlp | resnet18 | resnet50 | ...
+
+data:
+  dataset: cifar10            # cifar10 | cifar100 | mnist | fashionmnist | svhn
+  data_dir: ./data
+  split_type: iid             # iid | dir | class | niid
+  fl_type: supervised
+  num_of_clients: 10
+  alpha: 0.5                  # Dirichlet alpha - lower = more non-IID
+  min_samples: 10
+  weights: []                 # [] = equal. List of floats for unequal data sizes.
+
+server:
+  rounds: 20
+  clients_per_round: 5
+  aggregation_strategy: fedavg   # fedavg | fedavgm | fedprox | fedadam | fedyogi |
+                                  # fedmedian | fedtrimmedavg | krum | bulyan | qfedavg |
+                                  # dpfixedclip | dpadaptiveclip
+  aggregation_content: all
+  test_every: 1
+  save_model_every: 5
+  save_model_path: ./checkpoints
+  batch_size: 64
+  min_fit_clients: 2
+  min_evaluate_clients: 2
+  min_available_clients: 2
+  fraction_fit: 1.0
+  fraction_evaluate: 1.0
+  # FedProx
+  proximal_mu: 0.01
+  # FedAdam / FedYogi
+  eta: 0.01
+  eta_l: 0.1
+  beta_1: 0.9
+  beta_2: 0.99
+  tau: 1.0e-9
+  # Byzantine robustness
+  num_malicious_clients: 0
+  to_keep: 1
+  # Differential privacy
+  dp_enabled: false
+  noise_multiplier: 1.0
+  clipping_norm: 1.0
+
+client:
+  batch_size: 32
+  local_epoch: 5
+  optimizer: sgd              # sgd | adam
+  lr: 0.01
+  momentum: 0.9
+  weight_decay: 1.0e-4
+  local_test: false
+  test_batch_size: 64
+
+system:
+  gpu: 0                      # 0 = CPU; 1+ = use GPU(s)
+  distributed: false          # true = torch.distributed multi-GPU
+  simulation: true            # true = Flower Ray simulation; false = manual round loop
+  resource_heterogeneous: false
+  hetero_type: iso            # iso | dir | real
+  level: 0                    # 0-5 heterogeneity level
+
+tracking:
+  database: ./tracking.db
+  log_file: ./fl_training.log
+  log_level: INFO
