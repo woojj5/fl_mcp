@@ -71,20 +71,25 @@ docker compose logs -f fl-server fl-client-0 fl-client-1
 
 ### 실행 화면과 결과 읽기
 
-홈 화면의 각 영역은 다음 정보를 보여줍니다.
+아래는 실습 중 캡처한 두 화면을 각각 설명합니다.
 
-| 화면 영역 | 의미 |
-|-----------|------|
-| **Experiments** | SQLite에 등록된 학습 작업 수입니다. `fl_deploy`는 Docker 분산 실행, `simulation-...`은 대시보드 로컬 시뮬레이션입니다. |
-| **Latest round** | 최근에 집계까지 끝난 라운드 번호입니다. 아직 집계된 라운드가 없으면 `—`로 표시됩니다. |
-| **Deployment** | **Open deployment monitor**를 누르면 FL 서버와 Docker 클라이언트의 연결 상태를 봅니다. |
-| **Run local simulation** | 데이터셋, 모델, 라운드 수, 가상 클라이언트 수, 로컬 epoch, 배치 크기, 학습률, 분할 방식, 집계 전략, 시드를 정해 로컬 시뮬레이션을 시작합니다. |
-| **Tracked experiments** | 작업별 데이터셋·모델·전략·상태·시작 시각을 표시합니다. `running`은 작업이 아직 완료되지 않았다는 뜻입니다. |
-| **Recent rounds** | 집계가 완료된 라운드의 참여 클라이언트 수, loss, accuracy, 기록 시각을 표시합니다. |
+#### 이미지 1 — 첫 라운드 집계 전
 
-시뮬레이션 옆 상태가 `running: round 0/3`이면 데이터 준비가 끝났더라도 첫 라운드 학습이 아직 끝나지 않은 상태입니다. 따라서 **Latest round**가 `—`이고 **Recent rounds**가 비어 있을 수 있습니다. 첫 라운드 집계가 끝나면 1부터 결과가 쌓입니다. 표는 실시간 갱신되지 않으므로 완료 후 브라우저를 새로고침하세요. `round 0`에서 오래 진행되지 않으면 CIFAR-10 학습이 CPU에서 진행 중일 수 있습니다. 빠른 확인에는 MNIST와 1 local epoch를 권장합니다.
+- 상단 **Experiments**가 `1`이고 **Tracked experiments**에는 `fl_deploy`만 있습니다. Docker 기반 분산 학습 작업 하나가 등록된 상태입니다.
+- **Latest round**가 `—`이고 **Recent rounds**에 “Round metrics will appear after clients submit updates.”가 표시됩니다. 아직 클라이언트 업데이트가 서버에서 집계되지 않아 라운드 결과가 기록되지 않았다는 뜻입니다.
+- **Run local simulation** 옆의 `running: round 0/3 Dataset ready`는 로컬 시뮬레이션 데이터 준비는 끝났지만 첫 라운드가 아직 완료되지 않았다는 의미입니다. 이 상태에서는 로컬 시뮬레이션 결과도 표에 나타나지 않습니다.
+- **Open deployment monitor**를 누르면 Docker 서버와 클라이언트의 연결 상태를 별도로 확인할 수 있습니다.
 
-예를 들어 화면에 `Clients 2`, `Loss 1.420`, `Accuracy 0.486`이 보이면 두 클라이언트의 업데이트를 집계한 라운드가 기록된 것입니다. Accuracy `0.486`은 약 48.6%입니다. 학습이 계속되는 중이면 다음 라운드 결과가 기록될 때까지 기다린 다음 새로고침합니다.
+따라서 이미지 1은 두 학습 흐름이 시작됐지만 결과 라운드가 아직 기록되기 전인 화면입니다. CIFAR-10은 CPU에서 오래 걸릴 수 있으므로 `round 0`에서 학습이 진행되는 동안 기다려야 합니다.
+
+#### 이미지 2 — Docker 첫 라운드 집계 후
+
+- **Experiments**가 `2`로 늘었고 **Tracked experiments**에 `simulation-e922a87a11`과 `fl_deploy`가 있습니다. 각각 대시보드 로컬 시뮬레이션과 Docker 분산 학습입니다.
+- **Latest round**의 `1`은 집계가 완료된 최신 라운드가 1이라는 뜻입니다.
+- **Recent rounds**의 `fl_deploy / Round 1 / Clients 2`는 Docker 클라이언트 두 개의 업데이트를 FL 서버가 집계했다는 뜻입니다. `Loss 1.420375...`는 손실 값이고 `Accuracy 0.48646`은 약 48.6% 정확도입니다.
+- 이 화면에서도 로컬 시뮬레이션 상태는 `running: round 0/3`입니다. 아래 표의 1라운드 결과는 `simulation-...` 작업이 아니라 **fl_deploy의 Docker 라운드 결과**입니다.
+
+대시보드의 진행 상태는 주기적으로 바뀌지만, **Tracked experiments**와 **Recent rounds** 표는 페이지를 새로고침해야 최신 기록으로 갱신됩니다. 다음 Docker 라운드나 로컬 시뮬레이션 라운드가 끝난 뒤 새로고침해 결과를 확인하세요.
 
 ---
 
